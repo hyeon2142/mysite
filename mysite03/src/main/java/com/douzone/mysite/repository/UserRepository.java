@@ -8,12 +8,13 @@ import java.sql.SQLException;
 
 import org.springframework.stereotype.Repository;
 
+import com.douzone.mysite.exception.UserRepositoryException;
 import com.douzone.mysite.vo.UserVo;
 
 @Repository
 public class UserRepository {
 
-	public UserVo findByEmailAndPassword(String email, String password) {
+	public UserVo findByEmailAndPassword(String email, String password) throws UserRepositoryException {
 		UserVo vo = null;
 
 		Connection conn = null;
@@ -38,10 +39,13 @@ public class UserRepository {
 				vo = new UserVo();
 				vo.setNo(no);
 				vo.setName(name);
+			}else {
+				throw new UserRepositoryException();
 			}
 
 		} catch (SQLException e) {
-			System.out.println("error:" + e);
+			
+			//System.out.println("error:" + e);
 		} finally {
 			try {
 				if (rs != null) {
@@ -110,7 +114,7 @@ public class UserRepository {
 		return conn;
 	}
 
-	public UserVo findByNo(Long no) {
+	public UserVo findByNo(Long no) throws UserRepositoryException {
 		UserVo vo = null;
 
 		Connection conn = null;
@@ -142,7 +146,8 @@ public class UserRepository {
 			}
 
 		} catch (SQLException e) {
-			System.out.println("error:" + e);
+			throw new UserRepositoryException(e.toString());
+			//System.out.println("error:" + e);
 
 		} finally {
 			try {
@@ -212,5 +217,56 @@ public class UserRepository {
 			}
 
 		}
+
+	public boolean update(UserVo vo) {
+		boolean result = false;
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = getConnection();
+			
+			if("".equals(vo.getPassword())) {
+				String sql =
+						" update user " + 
+						"    set name=?, gender=?" + 
+						"  where no=?";
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, vo.getName());
+				pstmt.setString(2, vo.getGender());
+				pstmt.setLong(3, vo.getNo());
+			} else {
+				String sql =
+						" update user " + 
+						"    set name=?, gender=?, password=?" + 
+						"  where no=?";
+				pstmt = conn.prepareStatement(sql);
+				
+				pstmt.setString(1, vo.getName());
+				pstmt.setString(2, vo.getGender());
+				pstmt.setString(3, vo.getPassword());
+				pstmt.setLong(4, vo.getNo());
+			}
+			
+			int count = pstmt.executeUpdate();
+			result = count == 1;			
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		
+		return result;
+	}
 
 }
