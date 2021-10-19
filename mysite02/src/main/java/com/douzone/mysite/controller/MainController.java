@@ -12,6 +12,13 @@ import com.douzone.web.mvc.Action;
 import com.douzone.web.mvc.ActionFactory;
 
 public class MainController extends HttpServlet {
+	@Override
+	public void init() throws ServletException {
+		String configPath = getServletConfig().getInitParameter("config");
+		System.out.println("MainController.init() called: " + configPath);
+		super.init();
+	}
+
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

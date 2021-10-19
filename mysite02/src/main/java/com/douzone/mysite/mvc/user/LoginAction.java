@@ -18,7 +18,7 @@ public class LoginAction implements Action {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-		
+
 		UserVo userVo = new UserDao().findByEmailAndPassword(email, password);
 		if(userVo == null) {
 			/* 로그인 실패 */
@@ -28,9 +28,10 @@ public class LoginAction implements Action {
 		}
 		
 		/* 인증처리(세션처리) */
+	
 		HttpSession session = request.getSession(true);
 		session.setAttribute("authUser", userVo);
-		
+		session.setAttribute("userEmail", email);
 		MvcUtil.redirect("/mysite02", request, response);
 	}
 
