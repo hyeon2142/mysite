@@ -10,7 +10,6 @@ div#container	{ text-align:left; width:700px; margin:0 auto; background-color:#E
 div#content		{ float:right; width:580px; background-color:#fff }
 div#navigation	{ float:left; width:120px;  }
 div#footer		{ clear:both; width:100% }
-div#container2 { text-align:center; width:700px; margin:0 auto; background-color:#EEE }
 
 /* header */
 div#header	h1				{ height:70px; line-height:70px; margin:0; padding-left:10px; color:#79B30B }
@@ -34,8 +33,4 @@ div#navigation li a:active	{ color:#4F4F4F; text-decoration:none; }
 div#footer		{ background:#515151; color: #FFF }
 div#footer p	{ margin:0;padding:5px 10px }
 
-/* button */
-.button{
-	background-color: white;
-}
 

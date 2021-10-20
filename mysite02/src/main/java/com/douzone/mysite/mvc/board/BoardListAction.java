@@ -22,8 +22,9 @@ public class BoardListAction implements Action {
 		String page = request.getParameter("page");
 		List<BoardVo> list = new BoardDao().findAll(page);
 		
-		int rowCount = new BoardDao().getRowCount();
-		int maxButton;
+		int rowCount = new BoardDao().getRowCount(); // 총 게시물 수                 32
+		int maxButton;                               // 만들어야 하는 버튼 수           7
+		
 		
 		if(rowCount % 5 == 0) {
 			maxButton = rowCount/5;
@@ -41,6 +42,7 @@ public class BoardListAction implements Action {
 		} else {
 			request.setAttribute("list", list);
 			request.setAttribute("maxButton",maxButton);
+			request.setAttribute("page",page);
 			MvcUtil.forward("board/list", request, response);
 		}
 	}
