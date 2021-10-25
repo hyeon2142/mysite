@@ -23,12 +23,13 @@ public class ModifyAction implements Action {
 		String content = request.getParameter("content");
 		String user_no = request.getParameter("userno");
 		String rdate = request.getParameter("rdate");
-		
+		String page = request.getParameter("page");
+
 		
 		new BoardDao().update(Long.parseLong(user_no), title, rdate, updatetitle, content);
 		response.setContentType("text/html; charset=UTF-8");
 		PrintWriter writer = response.getWriter(); 
-		writer.println("<script>alert('수정되었습니다!'); location.href='"+request.getContextPath() + "/board"+"';</script>");
+		writer.println("<script>alert('수정되었습니다!'); location.href='"+request.getContextPath() + "/board?page="+page+"';</script>");
 
 		
 	}

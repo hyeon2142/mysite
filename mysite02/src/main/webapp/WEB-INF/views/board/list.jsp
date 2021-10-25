@@ -20,7 +20,7 @@
 					<input type="text" id="kwd" name="kwd" value=""> <input
 						type="submit" value="찾기">
 				</form>
-				<table class="tbl-ex">
+				<table class="tbl-ex" >
 					<tr>
 						<th>번호</th>
 						<th>제목</th>
@@ -31,50 +31,99 @@
 					</tr>
 
 					<c:set var='count' value='${fn:length(list) }' />
-
 					<c:forEach items='${list }' var='vo' varStatus='status'>
 						<tr>
 							<td>${count-status.index }</td>
-							<td><a
-								href="${pageContext.request.contextPath }/board?a=view&title=${vo.title }&rdate=${vo.reg_date }&userno=${vo.user_no }">${vo.title}</a>
-							</td>
+
+							<c:choose>
+								<c:when test="${vo.depth > 1}">
+									<c:choose>
+										<c:when test="${vo.title eq '삭제된 글 입니다.'}">
+										<td width='150px'
+												style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; word-break: break-all; text-align: left;">
+												<c:forEach var="i" begin="3" end="${vo.depth}"
+													varStatus="status">
+					          &nbsp; &nbsp;
+					         </c:forEach> <img
+												src="${pageContext.request.contextPath }/assets/images/reply.png" />
+												${vo.title}
+
+											</td>
+										</c:when>
+										<c:otherwise>
+											<td width='150px'
+												style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; word-break: break-all; text-align: left;">
+												<c:forEach var="i" begin="3" end="${vo.depth}"
+													varStatus="status">
+					          &nbsp; &nbsp;
+					         </c:forEach> <img
+												src="${pageContext.request.contextPath }/assets/images/reply.png" />
+												<a
+												href="${pageContext.request.contextPath }/board?a=view&title=${vo.title }&rdate=${vo.reg_date }&userno=${vo.user_no }&page=${param.page}&group_no=${vo.group_no}&order_no=${vo.order_no}&depth=${vo.depth}">${vo.title}</a>
+
+											
+										</c:otherwise>
+									</c:choose>
+								</c:when>
+
+
+								<c:otherwise>
+									<c:choose>
+										<c:when test="${vo.title eq '삭제된 글 입니다.'}">
+											<td width='150px'
+												style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; word-break: break-all; text-align: left;">${vo.title }</td>
+										</c:when>
+										<c:otherwise>
+											<td width='150px'
+												style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap; word-break: break-all; text-align: left;"><a
+												href="${pageContext.request.contextPath }/board?a=view&title=${vo.title }&rdate=${vo.reg_date }&userno=${vo.user_no }&page=${param.page}&group_no=${vo.group_no}&order_no=${vo.order_no}&depth=${vo.depth}">${vo.title}</a>
+											</td>
+										</c:otherwise>
+									</c:choose>
+								</c:otherwise>
+							</c:choose>
+
+
+
+
+
+
+
+
+
 							<td>${vo.writer }</td>
 							<td>${vo.hit}</td>
 							<td>${vo.reg_date}</td>
-							<td><a href="" class="del">삭제</a></td>
+							<td><a
+								href="${pageContext.request.contextPath }/board?a=delete&&title=${vo.title }&rdate=${vo.reg_date }&userno=${vo.user_no }&page=${param.page }"
+								class="del">삭제</a></td>
 						</tr>
 					</c:forEach>
 
 				</table>
 				<div class="bottom" style="display: inline;">
-
-
-
-					<fmt:parseNumber var="i" type="number" value="${maxButton }" />
-
-
 					<c:if test="${param.page ne '1' }">
 						<button name="button"
 							onclick="location.href='${pageContext.request.contextPath }/board?page=${param.page-1 }';">&nbsp;이전&nbsp;</button>
 					</c:if>
-					<c:forEach var="i" begin="1" end="${i }" varStatus='pageStatus'>
+					<c:forEach var="i" begin="${startPage }" end="${endPage }"
+						varStatus='pageStatus'>
 
-						
 						<c:choose>
-					        <c:when test="${param.page eq pageStatus.count}">
-					            <button name="button" class="button"
-							onclick="location.href='${pageContext.request.contextPath }/board?page=${pageStatus.count }';">&nbsp;${pageStatus.count }&nbsp;</button>
-					        </c:when>
+							<c:when test="${param.page eq pageStatus.current}">
+								<button name="button" class="button"
+									onclick="location.href='${pageContext.request.contextPath }/board?page=${pageStatus.current }';">&nbsp;${pageStatus.current }&nbsp;</button>
+							</c:when>
 							<c:otherwise>
-					           <button name="button"
-							onclick="location.href='${pageContext.request.contextPath }/board?page=${pageStatus.count }';">&nbsp;${pageStatus.count }&nbsp;</button>
-					         </c:otherwise>
+								<button name="button"
+									onclick="location.href='${pageContext.request.contextPath }/board?page=${pageStatus.current }';">&nbsp;${pageStatus.current }&nbsp;</button>
+							</c:otherwise>
 						</c:choose>
 
-						
 
 
-						
+
+
 
 					</c:forEach>
 					<c:if test="${maxButton != param.page }">

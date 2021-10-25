@@ -14,7 +14,7 @@ import java.util.List;
 import com.douzone.mysite.vo.BoardVo;
 
 public class BoardDao {
-	
+		
 	public int getRowCount() {
 		
 		int count = 0;
@@ -61,7 +61,7 @@ public class BoardDao {
 		return count;
 		
 	}
-	
+
 	public List<BoardVo> findAll(String page) {
 		
 		
@@ -77,8 +77,8 @@ public class BoardDao {
 			String sql = "SELECT board.no,title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s'),group_no,order_no,depth,user_no,name from board,user where board.user_no = user.no order by group_no desc, order_no asc Limit ?,?";
 			pstmt = conn.prepareStatement(sql);
 			int now = Integer.parseInt(page);
-			pstmt.setInt(1, (now-1)*5);
-			pstmt.setInt(2,5);
+			pstmt.setInt(1, (now-1)*10);
+			pstmt.setInt(2,10);
 			rs = pstmt.executeQuery();
 			
 
@@ -92,7 +92,7 @@ public class BoardDao {
 				int group_no = rs.getInt(6);
 				int order_no = rs.getInt(7);
 				int depth = rs.getInt(8);
-				int user_no = rs.getInt(9);
+				Long user_no = rs.getLong(9);
 				String writer = rs.getString(10);
 				
 				BoardVo vo = new BoardVo();
@@ -251,6 +251,54 @@ public class BoardDao {
 		return result;
 	}
 	
+	public boolean reply(BoardVo vo) {
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		PreparedStatement pstmt2 = null;
+		int count = 0;
+		
+		try {
+			conn = getConnection();
+			
+			String sql2 = "update board set order_no = order_no+1 where group_no = ? and order_no >= ?";
+			pstmt2 = conn.prepareStatement(sql2);
+			pstmt2.setInt(1, vo.getGroup_no());
+			pstmt2.setInt(2, vo.getOrder_no());
+			pstmt2.executeUpdate();
+			
+			String sql = "insert into board values(null,?,?,0,now(),?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);	
+			pstmt.setString(1, vo.getTitle());
+			pstmt.setString(2, vo.getContents());
+			pstmt.setInt(3, vo.getGroup_no());
+			pstmt.setInt(4, vo.getOrder_no());
+			pstmt.setInt(5, vo.getDepth());
+			pstmt.setLong(6, vo.getUser_no());
+			pstmt.executeUpdate();
+			result = count == 1;
+			
+			
+			
+			
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}		
+		
+		return result;
+	}
+	
 	public int findByUserNo(String email) {
 
 		Connection conn = null;
@@ -293,6 +341,47 @@ public class BoardDao {
 		return userNo;
 	}
 	
+	public void addhit(String title,String reg_date,int user_no) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		BoardVo vo = null;
+		
+		try {
+			conn = getConnection();
+			
+			String sql = "update board set hit = hit+1 where title=? and DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') = ? and user_no = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, title);
+			pstmt.setString(2, reg_date);
+			pstmt.setInt(3, user_no);
+	
+			int count = pstmt.executeUpdate();
+			
+			
+			
+			
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				if(pstmt != null) {
+					pstmt.close();
+				}
+				if(conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+		
+	}
+	
 	public BoardVo findContents(String title,String reg_date,int user_no) {
 
 		Connection conn = null;
@@ -311,14 +400,16 @@ public class BoardDao {
 			pstmt.setInt(3, user_no);
 			rs = pstmt.executeQuery();
 
-			if (rs.next()) {
+			if (rs.next()) {				
 				vo = new BoardVo();
 				String getTitle = rs.getString(1);
 				String getContents = rs.getString(2);
 				
+				
 				vo.setTitle(getTitle);
 				vo.setContents(getContents);
-
+				addhit(title,reg_date,user_no);
+				
 			}
 
 		} catch (SQLException e) {
@@ -340,6 +431,49 @@ public class BoardDao {
 		}
 
 		return vo;
+	}
+	
+	public void Delete(String title,String reg_date,int user_no) {
+		boolean result = false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+			conn = getConnection();
+
+			//String sql = " delete from board where title=? and DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') = ? and user_no = ?";
+			String sql = "update board set title = ? where title = ? and DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') = ? and user_no = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "삭제된 글 입니다.");
+			pstmt.setString(2, title);
+			pstmt.setString(3, reg_date);
+			pstmt.setInt(4, user_no);
+			rs = pstmt.executeQuery();
+			int count = pstmt.executeUpdate();
+			result = count == 1;
+
+			
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return;
 	}
 
 	private Connection getConnection() throws SQLException {

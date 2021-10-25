@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.douzone.mysite.security.Auth;
 import com.douzone.mysite.service.GuestbookService;
 import com.douzone.mysite.vo.GuestbookVo;
 
@@ -18,6 +19,7 @@ import com.douzone.mysite.vo.GuestbookVo;
 public class GuestbookController {
 	@Autowired
 	GuestbookService guestbookService;
+	
 	
 	@RequestMapping("")
 	public String index(Model model) {

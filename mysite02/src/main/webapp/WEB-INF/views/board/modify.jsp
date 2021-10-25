@@ -18,6 +18,7 @@
 					<input type="hidden" name="userno" value="${userno }">
 					<input type="hidden" name="rdate" value="${rdate }">
 					<input type="hidden" name="title" value="${title }">
+					<input type="hidden" name="page" value="${page }">
 					<table class="tbl-ex">
 						<tr>
 							<th colspan="2">글수정</th>

@@ -11,7 +11,7 @@ public class BoardVo {
 	private int group_no;
 	private int order_no;
 	private int depth;
-	private int user_no;
+	private Long user_no;
 	private String writer;
 	private String email;
 	
@@ -27,11 +27,15 @@ public class BoardVo {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
 	public int getNo() {
 		return no;
 	}
 	public void setNo(int no) {
 		this.no = no;
+	}
+	public void setUser_no(Long user_no) {
+		this.user_no = user_no;
 	}
 	public String getTitle() {
 		return title;
@@ -75,11 +79,9 @@ public class BoardVo {
 	public void setDepth(int depth) {
 		this.depth = depth;
 	}
-	public int getUser_no() {
+	
+	public Long getUser_no() {
 		return user_no;
-	}
-	public void setUser_no(int user_no) {
-		this.user_no = user_no;
 	}
 	public void setWriter(String writer) {
 		this.writer = writer;

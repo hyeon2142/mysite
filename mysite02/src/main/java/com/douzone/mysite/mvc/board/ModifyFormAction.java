@@ -19,13 +19,15 @@ public class ModifyFormAction implements Action {
 		
 		HttpSession session = request.getSession();
 		UserVo vo = (UserVo) session.getAttribute("authUser");
-
+		
 		
 		if(vo.getNo() == Integer.parseInt(request.getParameter("userno"))) {
 			
 			request.setAttribute("userno", request.getParameter("userno"));
 			request.setAttribute("rdate", request.getParameter("rdate"));
 			request.setAttribute("title", request.getParameter("title"));
+			request.setAttribute("page", request.getParameter("page"));
+	
 			
 			MvcUtil.forward("board/modify", request, response);
 			
@@ -33,7 +35,7 @@ public class ModifyFormAction implements Action {
 
 			response.setContentType("text/html; charset=UTF-8");
 			PrintWriter writer = response.getWriter(); 
-			writer.println("<script>alert('권한이 없습니다!'); location.href='"+request.getContextPath() + "/board"+"';</script>");
+			writer.println("<script>alert('권한이 없습니다!'); history.back();</script>");
 
 		
 		}
