@@ -1,0 +1,41 @@
+[src]
+  |---  [main]
+	|--- [java]
+	|       |--- com
+	|       |       |--- douzone
+	|       |       |         |--- config	
+	|       |       |         |        |--- app
+	|       |       |         |        |      |--- DBConfig.java
+	|       |       |         |        |      |--- MyBatisConfig.java
+	|       |       |         |        |--- web
+	|       |       |         |        |      |--- MvcConfig.java
+	|       |       |         |        |      |--- SecurityConfig.java
+	|       |       |         |        |      |--- MessageConfig.java
+	|       |       |         |        |      |--- FileuploadConfigConfig.java
+	|       |       |         |        |
+	|       |       |         |--- mysite
+	|       |       |         |        |--- controller
+	|       |       |         |        |--- service
+	|       |       |         |        |--- repository
+	|       |       |         |        |--- vo
+	|       |       |         |        |--- exception
+	|       |       |         |        |--- aop
+	|       |       |         |        |--- config
+	|       |       |         |        |        |--- AppConfig.java
+	|       |       |         |        |        |--- WebConfig.java
+	|--- [resources]
+	|       |--- logback.xml
+	|       |--- com
+	|       |       |--- douzone
+	|       |       |	|--- mysite
+	|       |       |	|        |--- config
+	|       |       |	|        |        |--- app
+	|       |       |	|        |        |      |--- jdbc.properties
+	|       |       |	|        |        |      |--- mybatis
+	|       |       |	|        |        |      |        |--- configuration.xml
+	|       |       |	|        |        |      |        |--- mappers
+	|       |       |	|        |        |      |        |         |--- board.xml
+	|       |       |	|        |        |      |        |         |--- user.xml
+	|       |       |	|        |        |--- web
+	|       |       |	|        |        |      |--- message_ko.properties
+	|       |       |	|        |        |      |--- fileupload.properties

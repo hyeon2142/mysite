@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="board">
+
+	<select id="findAll" parameterType="integer" resultType="boardvo">
+		<![CDATA[
+		  SELECT board.no,title,contents,hit,DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') as reg_date,group_no,order_no,depth,user_no,name as writer from board,user where board.user_no = user.no order by group_no desc, order_no asc Limit #{startPage },10
+		]]>
+	</select>
+	
+	<select id="getRowCount" resultType="integer">
+		<![CDATA[
+		  SELECT count(title) from board
+		]]>
+	</select>
+	
+	<select id="findContents" parameterType="map" resultType="boardvo">
+		<![CDATA[
+		  SELECT title,contents from board where title=#{title } and DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') = #{reg_date } and user_no = #{user_no }
+		]]>
+	</select>
+	
+	<update id="addhit" parameterType="map">
+		<![CDATA[
+		  update board set hit = hit+1 where title=#{title} and DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') = #{reg_date } and user_no = #{user_no }
+		]]>
+	</update>
+	
+	<delete id="delete" parameterType="map">
+		<![CDATA[
+		  update board set title = #{newtitle } where title = #{title} and DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') = #{reg_date} and user_no = #{user_no }
+		]]>
+	</delete>
+	
+	<update id="update" parameterType="map">
+		<![CDATA[
+		  update board set title = #{newtitle }, contents = #{contents } where user_no = #{user_no } and title = #{title } and DATE_FORMAT(reg_date,'%Y-%m-%d %h:%i:%s') = #{reg_date}
+		]]>
+	</update>
+	
+	<insert id="write" parameterType="map">
+		<![CDATA[
+		  insert into board values(null,#{title },#{contents },0,now(),#{group_no },1,1,#{user_no })
+		]]>
+	</insert>
+	
+	<select id="findTopGroupNo" resultType="integer">
+		<![CDATA[
+	     select max(group_no) from board
+		]]>
+	</select>
+	
+	<update id="reply" parameterType="map">
+		<![CDATA[
+			update board set order_no = order_no+1 where group_no = #{group_no} and order_no >= #{order_no}
+		]]>
+	</update>
+	
+	<insert id="writereply" parameterType="map">
+		<![CDATA[
+		  insert into board values(null,#{title },#{contents },0,now(),#{group_no },#{order_no},#{depth },#{user_no })
+		]]>
+	</insert>
+	
+	
+	
+
+</mapper>
