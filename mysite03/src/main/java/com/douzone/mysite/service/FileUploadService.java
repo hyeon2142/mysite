@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 public class FileUploadService {
 	private static String SAVE_PATH = "/upload-mysite";
-	private static String URL_BASE = "/upload/images/";	
+	private static String URL_BASE = "/upload/images";	
 	
 	
 	public String restoreImage(MultipartFile file) throws FileUploadException {
